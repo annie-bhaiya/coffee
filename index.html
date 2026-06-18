@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greek Odyssey Cafe</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Color Palette */
+        :root {
+            --crimson: #7f1d1d;
+            --cream: #f5f0e4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--cream);
+            color: var(--crimson);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Hero Container */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Shared styling for background and foreground layers */
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; /* Prevents images from blocking scroll interactions */
+        }
+
+        /* Background - Layer 1 (Bottom) */
+        .bg-layer {
+            z-index: 1;
+        }
+
+        /* Text - Layer 2 (Middle) */
+        .text-layer {
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            
+            /* Initial load animation setup */
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.5s;
+        }
+
+        .text-layer h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            line-height: 1.1;
+            color: var(--crimson);
+        }
+
+        .text-layer p {
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            letter-spacing: 0.3em;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* Foreground Doodles - Layer 3 (Top) */
+        .fg-layer {
+            z-index: 3;
+            /* The magic trick: Multiplies the colors. White becomes transparent, crimson stays crimson. */
+            mix-blend-mode: multiply; 
+            object-position: bottom; /* Keeps the doodles anchored to the bottom */
+        }
+
+        /* Placeholder content to allow scrolling */
+        .content {
+            position: relative;
+            z-index: 4; /* Stays above the hero section */
+            background-color: var(--cream);
+            padding: 120px 20px;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .content h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 25px;
+        }
+
+        .content p {
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Load-in Animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <img src="b.jpeg" alt="Cream Background" class="layer bg-layer" id="bg">
+        
+        <div class="text-layer" id="text">
+            <h1>Cafe Takeover</h1>
+            <p>Takes under a minute</p>
+        </div>
+        
+        <img src="f.jpeg" alt="Crimson Line Art" class="layer fg-layer" id="fg">
+    </section>
+
+    <section class="content">
+        <h2>Welcome to the Odyssey</h2>
+        <p>Our coffee is brewed with the patience of Penelope and the strength of Hercules. Let the crimson art and the cream atmosphere transport you to the Aegean.</p>
+    </section>
+
+   <script>
+        const bg = document.getElementById('bg');
+        const text = document.getElementById('text');
+
+        window.addEventListener('scroll', () => {
+            let scrollPosition = window.scrollY;
+            let windowHeight = window.innerHeight;
+
+            // 1. Background Parallax (Moves slower to create depth)
+            bg.style.transform = `translateY(${scrollPosition * 0.3}px)`;
+            
+            // 2. Text Parallax & Cap Logic
+            // Calculate a maximum drop distance (e.g., 40% of the screen height).
+            // Adjust the 0.4 multiplier if your foreground doodles are higher or lower.
+            let maxTextDrop = windowHeight * 0.4; 
+            
+            // Use Math.min to prevent the text from dropping further than the cap.
+            let textDrop = Math.min(scrollPosition * 0.65, maxTextDrop);
+            
+            // 3. Opacity Fade (Optional Elegance)
+            // Starts fading the text out after it has scrolled down a bit, ensuring 
+            // it doesn't accidentally peek out of the bottom on unusually tall screens.
+            let fadeOutStart = windowHeight * 0.25;
+            let opacity = 1;
+            
+            if (scrollPosition > fadeOutStart) {
+                // Fades from 1 to 0 over the next 300 pixels of scroll
+                opacity = Math.max(1 - ((scrollPosition - fadeOutStart) / 300), 0);
+            }
+
+            // Apply the capped transformation and the opacity fade
+            text.style.transform = `translateY(${textDrop}px)`;
+            text.style.opacity = opacity;
+        });
+    </script>
+</body>
+</html>
