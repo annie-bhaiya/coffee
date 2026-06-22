@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" data-lt-installed="true"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Greek Odyssey Cafe</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&amp;family=Montserrat:wght@300;400&amp;display=swap" rel="stylesheet">
     
     <style>
         /* Color Palette */
@@ -55,9 +53,30 @@
             z-index: 1;
         }
 
+        /* NEW: The stationary mask container */
+.text-mask-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* Sits exactly where the text used to */
+    pointer-events: none;
+
+    /* The Mask properties */
+    -webkit-mask-image: url('mask.png');
+    -webkit-mask-size: cover;
+    -webkit-mask-position: bottom;
+    -webkit-mask-repeat: no-repeat;
+    mask-image: url('mask.png');
+    mask-size: cover;
+    mask-position: bottom;
+    mask-repeat: no-repeat;
+}
+
         /* Text - Layer 2 (Middle) */
         .text-layer {
-            z-index: 2;
+        
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -88,6 +107,7 @@
             letter-spacing: 0.3em;
             font-weight: 300;
             text-transform: uppercase;
+            transition: transform 0.1s ease-out; /* Adds a smooth catch-up effect */
         }
 
         /* Foreground Doodles - Layer 3 (Top) */
@@ -104,7 +124,6 @@
             z-index: 4; /* Stays above the hero section */
             background-color: var(--cream);
             padding: 120px 20px;
-            min-height: 100vh;
             text-align: center;
         }
 
@@ -128,29 +147,457 @@
                 transform: translateY(0);
             }
         }
+
+        @media (max-width: 768px) {
+            .hero {
+                /* Uses dynamic viewport height to prevent mobile browser UI jumpiness */
+                height: 100svh; 
+            }
+            
+            .text-layer {
+                padding: 0 15px; /* Prevents text from touching screen edges */
+            }
+
+            .content {
+                padding: 80px 15px; /* Tighter padding for smaller screens */
+            }
+            
+            .content p {
+                font-size: 1rem; /* Slightly scaled down body text */
+            }
+        }
+
+        /* --- HOW MEETUP WORKS SECTION --- */
+        .meetup-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 20px;
+            background-color: var(--cream);
+            color: var(--crimson);
+            position: relative;
+            z-index: 4; /* Keeps it above the hero layers */
+            height:100vh;
+        }
+
+        .meetup-container {
+            max-width: 1000px;
+            width: 100%;
+            position: relative;
+        }
+
+        .meetup-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .meetup-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 40px 150px;
+            position: relative;
+        }
+
+        /* Connecting Arrows */
+        .arrow-1 {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .arrow-2 {
+            position: absolute;
+            top: 175px;
+            right: 20%;
+            transform: translateX(20%);
+            width: 120px;
+            height: 85px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .card {
+            background-color: transparent;
+            border: 1px solid var(--crimson);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card.bottom-card {
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: 100%;
+            max-width: 450px;
+            margin-top: 40px;
+        }
+
+        .icon-wrapper {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            color: var(--crimson);
+        }
+
+        .card-content h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .card-content p {
+            font-size: 14px;
+            color: var(--crimson);
+            line-height: 1.5;
+            margin: 0 0 15px 0;
+        }
+
+        /* Card Section Responsive */
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .arrow-1, .arrow-2 {
+                display: none;
+            }
+
+            .card {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .card.bottom-card {
+                grid-column: 1;
+                max-width: 100%;
+                margin-top: 0;
+                justify-self: stretch;
+            }
+        }
+
+        /* --- GREEK JOCK CTA BUTTON --- */
+       /* --- GREEK JOCK CTA BUTTON --- */
+        .cta-btn {
+            background-color: var(--crimson); /* Changed to filled by default */
+            border: 1px solid var(--crimson);
+            border-radius: 12px;
+            padding: 12px 28px;
+            color: var(--cream); /* Changed text/icon to cream by default */
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            
+            /* Changed to Row for single-line layout */
+            display: flex;
+            flex-direction: row; 
+            align-items: center;
+            justify-content: center;
+            gap: 15px; 
+            
+            margin: 15px 0 25px 0;
+            transition: background-color 0.4s ease, color 0.4s ease, transform 0.2s ease;
+            z-index: 5; 
+            pointer-events: auto;
+        }
+
+        .cta-btn:hover {
+            background-color: transparent; /* Changed to unfilled on hover */
+            color: var(--crimson); /* Changed text/icon to crimson on hover */
+            transform: scale(1.02);
+        }
+
+        /* Scaled down to match text size perfectly */
+        .svg-container {
+            width: 26px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        /* The sliding text container */
+        .btn-text-wrapper {
+            position: relative;
+            display: block;
+            height: 1.2em; 
+            width: 200px; /* Fixed width so the button doesn't resize on hover */
+            overflow: hidden;
+        }
+
+        .text-default, .text-hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .text-hover {
+            transform: translateY(100%);
+        }
+
+        .cta-btn:hover .text-default {
+            transform: translateY(-100%);
+        }
+
+        .cta-btn:hover .text-hover {
+            transform: translateY(0);
+        }
+
+        /* Sneaky Animation Keyframes */
+        .stick {
+            transform-origin: 65px 70px; /* Pivots exactly at his hand */
+            animation: stir 1.2s infinite linear;
+        }
+
+        .sneaky-eye {
+            animation: shifty-eyes 4s infinite;
+        }
+
+        @keyframes stir {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(15deg); }
+            100% { transform: rotate(-10deg); }
+        }
+
+        @keyframes shifty-eyes {
+            0%, 20% { transform: translateX(0); }
+            25%, 45% { transform: translateX(-4px); } /* Looks back nervously */
+            50%, 75% { transform: translateX(4px); }  /* Looks down into cauldron */
+            80%, 100% { transform: translateX(0); }
+        }
+
+        /* 1. Add keyframes for floating and pulsing animations */
+@keyframes floatArrow1 {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-12px); }
+}
+
+@keyframes floatArrow2 {
+    0%, 100% { transform: translateX(20%) translateY(0); }
+    50% { transform: translateX(20%) translateY(-12px); }
+}
+
+@keyframes pulseIcon {
+    0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(127, 29, 29, 0)); }
+    50% { transform: scale(1.1); opacity: 0.8; filter: drop-shadow(0 0 8px rgba(127, 29, 29, 0.4)); }
+    100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(127, 29, 29, 0)); }
+}
+
+/* 2. Update the arrow classes to apply the floating animation[cite: 1] */
+.arrow-1 {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 50px;
+    z-index: 0;
+    pointer-events: none;
+    /* NEW: Ethereal floating effect */
+    animation: floatArrow1 4s ease-in-out infinite; 
+}
+
+.arrow-2 {
+    position: absolute;
+    top: 175px;
+    right: 20%;
+    transform: translateX(20%);
+    width: 120px;
+    height: 85px;
+    z-index: 0;
+    pointer-events: none;
+    /* NEW: Ethereal floating effect (staggered duration) */
+    animation: floatArrow2 4.5s ease-in-out infinite; 
+}
+
+/* 3. Update .card to prepare for scroll-reveal and add smooth transitions[cite: 1] */
+.card {
+    background-color: transparent;
+    border: 1px solid var(--crimson);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+    /* NEW: Initial hidden state for JS reveal and smooth transition setup */
+    opacity: 0; 
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+}
+
+/* 4. Add the 'revealed' and 'hover' states for the cards[cite: 1] */
+.card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card.revealed:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(127, 29, 29, 0.15);
+}
+
+/* 5. Add the pulsing hover effect to the SVG icons[cite: 1] */
+.card.revealed:hover .icon-wrapper svg {
+    animation: pulseIcon 1.5s infinite;
+}
     </style>
 </head>
 <body>
 
-    <section class="hero">
-        <img src="b.jpeg" alt="Cream Background" class="layer bg-layer" id="bg">
-        
-        <div class="text-layer" id="text">
-            <h1>Cafe Takeover</h1>
-            <p>Takes under a minute</p>
+   <section class="hero">
+    <img src="b.jpeg" alt="Cream Background" class="layer bg-layer" id="bg">
+    
+    <div class="text-mask-wrapper">
+        <div id="parallax-text" style="width: 100%; height: 100%;">
+            
+            <div class="text-layer">
+                <h1>Cafe Takeover</h1>
+                
+                <!-- NEW ANIMATED BUTTON -->
+               <!-- NEW ANIMATED BUTTON -->
+                <button class="cta-btn">
+                    <div class="svg-container">
+                        <!-- Literal Greek Jock Line Art -->
+                        <svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                            
+                            <!-- Cauldron & Rim -->
+                            <path d="M 60 75 C 60 95 95 95 95 75 Z" />
+                            <line x1="55" y1="75" x2="100" y2="75" />
+                            
+                            <!-- Muscular Torso -->
+                            <path d="M 15 95 C 15 65 45 65 45 95" />
+                            
+                            <!-- Flexed Bicep Arm -->
+                            <path d="M 30 70 Q 50 55 65 70" />
+                            
+                            <!-- The Stirring Stick -->
+                            <line x1="60" y1="40" x2="80" y2="90" class="stick" />
+                            
+                            <!-- Greek Profile Head (Straight nose, strong jaw) -->
+                            <path d="M 35 45 L 35 38 L 42 38 L 42 28 L 35 28 L 32 15 C 25 5 15 10 15 25 L 15 45 Z" />
+                            
+                            <!-- Laurel Wreath -->
+                            <path d="M 12 20 Q 25 10 38 20" />
+                            
+                            <!-- Sneaky Eye (Solid fill, uses transform for looking left/right) -->
+                            <circle cx="28" cy="24" r="2" fill="currentColor" stroke="none" class="sneaky-eye" />
+                            
+                        </svg>
+                    </div>
+                    
+                    <div class="btn-text-wrapper">
+                        <span class="text-default">Join the fun</span>
+                        <span class="text-hover">Reserve your seat</span>
+                    </div>
+                </button>
+                
+                <p>Takes under a minute</p>
+            </div>
+            
         </div>
-        
-        <img src="f.jpeg" alt="Crimson Line Art" class="layer fg-layer" id="fg">
-    </section>
+    </div>
+    
+    <img src="f.jpeg" alt="Crimson Line Art" class="layer fg-layer" id="fg">
+</section>
 
-    <section class="content">
-        <h2>Welcome to the Odyssey</h2>
-        <p>Our coffee is brewed with the patience of Penelope and the strength of Hercules. Let the crimson art and the cream atmosphere transport you to the Aegean.</p>
+    <section class="meetup-section">
+        <div class="meetup-container">
+            <div class="meetup-header">
+                <h2>How it works</h2>
+            </div>
+
+            <div class="grid-layout">
+                
+                <svg class="arrow-1" viewBox="0 0 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 10,40 C 50,10 100,10 140,40" stroke="#7f1d1d" stroke-width="2" fill="transparent"/>
+                    <path d="M 130,35 L 140,40 L 130,45" fill="none" stroke="#7f1d1d" stroke-width="2"/>
+                </svg>
+
+                <svg class="arrow-2" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 100,10 C 120,60 80,120 10,140" stroke="#7f1d1d" stroke-width="2" fill="transparent"/>
+                    <path d="M 20,130 L 10,140 L 25,145" fill="none" stroke="#7f1d1d" stroke-width="2"/>
+                </svg>
+
+                <div class="card">
+                    <div class="icon-wrapper">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            <circle cx="12" cy="15" r="2"></circle>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3>Pick your night</h3>
+                        <p>Browse what’s coming up and tap whatever sounds like your kind of Takeover.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <circle cx="8.5" cy="12" r="2.5"></circle>
+                            <line x1="13" y1="10.5" x2="19" y2="10.5"></line>
+                            <line x1="13" y1="13.5" x2="17" y2="13.5"></line>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3>Say hello</h3>
+                        <p>One short form with your name, your number and your Instagram. Under a minute, and you only ever do it once.</p>
+                    </div>
+                </div>
+
+                <div class="card bottom-card">
+                    <div class="icon-wrapper">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            <polyline points="9 11 11 13 15 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h3>Get the nod</h3>
+                        <p>Every guest list is curated by hand so the room feels right. Your invite lands straight on your phone.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </section>
 
    <script>
         const bg = document.getElementById('bg');
-        const text = document.getElementById('text');
+        const text = document.getElementById('parallax-text');
 
         window.addEventListener('scroll', () => {
             let scrollPosition = window.scrollY;
@@ -159,13 +606,9 @@
             // 1. Background Parallax (Moves slower to create depth)
             bg.style.transform = `translateY(${scrollPosition * 0.3}px)`;
             
-            // 2. Text Parallax & Cap Logic
-            // Calculate a maximum drop distance (e.g., 40% of the screen height).
-            // Adjust the 0.4 multiplier if your foreground doodles are higher or lower.
-            let maxTextDrop = windowHeight * 0.4; 
-            
-            // Use Math.min to prevent the text from dropping further than the cap.
-            let textDrop = Math.min(scrollPosition * 0.65, maxTextDrop);
+           // 2. Text Parallax
+           // Allow the text to scroll all the way down into the mask boundary
+           let textDrop = scrollPosition * 0.3; // Moves slower than the scroll, but faster than the background
             
             // 3. Opacity Fade (Optional Elegance)
             // Starts fading the text out after it has scrolled down a bit, ensuring 
@@ -175,13 +618,45 @@
             
             if (scrollPosition > fadeOutStart) {
                 // Fades from 1 to 0 over the next 300 pixels of scroll
-                opacity = Math.max(1 - ((scrollPosition - fadeOutStart) / 300), 0);
+                opacity = Math.max(1 - ((scrollPosition - fadeOutStart) / 800), 0);
             }
 
             // Apply the capped transformation and the opacity fade
             text.style.transform = `translateY(${textDrop}px)`;
             text.style.opacity = opacity;
         });
+
+        // --- NEW: Intersection Observer for Mythic Card Reveal --- //
+
+// Configure the observer to trigger when cards are 20% visible[cite: 1]
+const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.2
+};
+
+const cardObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            // Add a staggered delay based on the card's position in the DOM[cite: 1]
+            const cardArray = Array.from(document.querySelectorAll('.card'));
+            const index = cardArray.indexOf(entry.target);
+            
+            setTimeout(() => {
+                entry.target.classList.add('revealed');
+            }, index * 200); // 200ms delay between each card revealing
+            
+            // Unobserve to run the animation only once[cite: 1]
+            observer.unobserve(entry.target); 
+        }
+    });
+}, observerOptions);
+
+// Attach the observer to all card elements[cite: 1]
+const cards = document.querySelectorAll('.card');
+cards.forEach(card => {
+    cardObserver.observe(card);
+});
     </script>
-</body>
-</html>
+
+</body></html>
