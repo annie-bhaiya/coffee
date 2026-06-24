@@ -1,15 +1,20 @@
-<html lang="en" data-lt-installed="true"><head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greek Odyssey Cafe</title>
+    <title>Cafe Takeover</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&amp;family=Montserrat:wght@300;400&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* Color Palette */
+        /* Color Palette & Variables */
         :root {
             --crimson: #7f1d1d;
+            --crimson-light: rgba(127, 29, 29, 0.2);
+            --crimson-glow: rgba(127, 29, 29, 0.08);
             --cream: #f5f0e4;
+            --ease-elegant: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-out-smooth: cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * {
@@ -18,12 +23,17 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--cream);
             color: var(--crimson);
             font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Hero Container */
@@ -37,7 +47,6 @@
             align-items: center;
         }
 
-        /* Shared styling for background and foreground layers */
         .layer {
             position: absolute;
             top: 0;
@@ -45,38 +54,40 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            pointer-events: none; /* Prevents images from blocking scroll interactions */
+            pointer-events: none;
         }
 
-        /* Background - Layer 1 (Bottom) */
+        /* Background - Layer 1 */
         .bg-layer {
             z-index: 1;
+            transform: scale(1.05);
+            animation: kenBurns 25s var(--ease-out-smooth) forwards;
         }
 
-        /* NEW: The stationary mask container */
-.text-mask-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2; /* Sits exactly where the text used to */
-    pointer-events: none;
+        @keyframes kenBurns {
+            0% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
 
-    /* The Mask properties */
-    -webkit-mask-image: url('mask.png');
-    -webkit-mask-size: cover;
-    -webkit-mask-position: bottom;
-    -webkit-mask-repeat: no-repeat;
-    mask-image: url('mask.png');
-    mask-size: cover;
-    mask-position: bottom;
-    mask-repeat: no-repeat;
-}
+        .text-mask-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            -webkit-mask-image: url('mask.png');
+            -webkit-mask-size: cover;
+            -webkit-mask-position: bottom;
+            -webkit-mask-repeat: no-repeat;
+            mask-image: url('mask.png');
+            mask-size: cover;
+            mask-position: bottom;
+            mask-repeat: no-repeat;
+        }
 
-        /* Text - Layer 2 (Middle) */
         .text-layer {
-        
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -84,87 +95,46 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            
-            /* Initial load animation setup */
             opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.5s;
+            filter: blur(10px);
+            transform: translateY(40px);
+            animation: elegantFadeIn 2s var(--ease-elegant) forwards 0.3s;
         }
 
         .text-layer h1 {
             font-family: 'Cinzel', serif;
             font-size: clamp(3rem, 8vw, 8rem);
             font-weight: 700;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             line-height: 1.1;
             color: var(--crimson);
+            text-shadow: 0 4px 20px rgba(127, 29, 29, 0.1);
         }
 
         .text-layer p {
-            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-            letter-spacing: 0.3em;
+            font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+            letter-spacing: 0.4em;
             font-weight: 300;
             text-transform: uppercase;
-            transition: transform 0.1s ease-out; /* Adds a smooth catch-up effect */
+            opacity: 0.8;
         }
 
-        /* Foreground Doodles - Layer 3 (Top) */
-        .fg-layer {
-            z-index: 3;
-            /* The magic trick: Multiplies the colors. White becomes transparent, crimson stays crimson. */
-            mix-blend-mode: multiply; 
-            object-position: bottom; /* Keeps the doodles anchored to the bottom */
-        }
-
-        /* Placeholder content to allow scrolling */
-        .content {
-            position: relative;
-            z-index: 4; /* Stays above the hero section */
-            background-color: var(--cream);
-            padding: 120px 20px;
-            text-align: center;
-        }
-
-        .content h2 {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 4vw, 3rem);
-            margin-bottom: 25px;
-        }
-
-        .content p {
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        /* Load-in Animation */
-        @keyframes fadeInUp {
+        @keyframes elegantFadeIn {
             to {
                 opacity: 1;
+                filter: blur(0);
                 transform: translateY(0);
             }
         }
 
-        @media (max-width: 768px) {
-            .hero {
-                /* Uses dynamic viewport height to prevent mobile browser UI jumpiness */
-                height: 100svh; 
-            }
-            
-            .text-layer {
-                padding: 0 15px; /* Prevents text from touching screen edges */
-            }
-
-            .content {
-                padding: 80px 15px; /* Tighter padding for smaller screens */
-            }
-            
-            .content p {
-                font-size: 1rem; /* Slightly scaled down body text */
-            }
+        .fg-layer {
+            z-index: 3;
+            mix-blend-mode: multiply; 
+            object-position: bottom;
+            opacity: 0;
+            animation: elegantFadeIn 2s var(--ease-elegant) forwards 0.8s;
         }
 
         /* --- HOW MEETUP WORKS SECTION --- */
@@ -172,12 +142,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 80px 20px;
+            padding: 120px 20px 60px 20px;
             background-color: var(--cream);
             color: var(--crimson);
             position: relative;
-            z-index: 4; /* Keeps it above the hero layers */
-            height:100vh;
+            z-index: 4;
         }
 
         .meetup-container {
@@ -188,164 +157,191 @@
 
         .meetup-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 80px;
         }
 
         .meetup-header h2 {
             font-family: 'Cinzel', serif;
             font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 700;
+            font-weight: 500;
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
         }
 
         .grid-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: auto auto;
-            gap: 40px 150px;
+            gap: 50px 120px;
             position: relative;
         }
 
-        /* Connecting Arrows */
-        .arrow-1 {
+        /* Connecting Arrows with Line Drawing Animation */
+        .arrow-1, .arrow-2 {
             position: absolute;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .arrow-1 {
             top: 70px;
             left: 50%;
             transform: translateX(-50%);
             width: 120px;
             height: 50px;
-            z-index: 0;
-            pointer-events: none;
         }
         
         .arrow-2 {
-            position: absolute;
             top: 175px;
             right: 20%;
             transform: translateX(20%);
             width: 120px;
             height: 85px;
-            z-index: 0;
-            pointer-events: none;
         }
 
+        .draw-path {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            transition: stroke-dashoffset 2s var(--ease-elegant);
+        }
+
+        .arrow-revealed .draw-path {
+            stroke-dashoffset: 0;
+        }
+
+        /* Elegant Cards */
         .card {
-            background-color: transparent;
-            border: 1px solid var(--crimson);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--crimson-light);
+            border-radius: 20px;
+            padding: 40px 30px;
             display: flex;
-            gap: 20px;
+            gap: 25px;
             position: relative;
             z-index: 1;
+            
+            /* Blur reveal setup */
+            opacity: 0; 
+            transform: translateY(30px);
+            filter: blur(5px);
+            transition: opacity 1.2s var(--ease-elegant), 
+                        transform 1.2s var(--ease-elegant), 
+                        filter 1.2s var(--ease-elegant),
+                        box-shadow 0.5s ease,
+                        border-color 0.5s ease;
         }
 
         .card.bottom-card {
             grid-column: 1 / -1;
             justify-self: center;
             width: 100%;
-            max-width: 450px;
-            margin-top: 40px;
+            max-width: 500px;
+            margin-top: 20px;
         }
 
         .icon-wrapper {
             flex-shrink: 0;
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             color: var(--crimson);
+            opacity: 0.8;
+            transition: opacity 0.4s ease, transform 0.4s var(--ease-elegant);
         }
 
         .card-content h3 {
             font-family: 'Cinzel', serif;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 12px 0;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
         }
 
         .card-content p {
-            font-size: 14px;
+            font-size: 0.95rem;
             color: var(--crimson);
-            line-height: 1.5;
-            margin: 0 0 15px 0;
+            line-height: 1.7;
+            margin: 0;
+            opacity: 0.85;
+            font-weight: 400;
         }
 
-        /* Card Section Responsive */
-        @media (max-width: 768px) {
-            .grid-layout {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .arrow-1, .arrow-2 {
-                display: none;
-            }
-
-            .card {
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .card.bottom-card {
-                grid-column: 1;
-                max-width: 100%;
-                margin-top: 0;
-                justify-self: stretch;
-            }
+        /* Reveal & Hover States */
+        .card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
         }
 
-        /* --- GREEK JOCK CTA BUTTON --- */
-       /* --- GREEK JOCK CTA BUTTON --- */
+        .card.revealed:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px var(--crimson-glow);
+            border-color: rgba(127, 29, 29, 0.4);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .card.revealed:hover .icon-wrapper {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* --- CTA BUTTON --- */
         .cta-btn {
-            background-color: var(--crimson); /* Changed to filled by default */
+            background-color: var(--crimson); 
             border: 1px solid var(--crimson);
-            border-radius: 12px;
-            padding: 12px 28px;
-            color: var(--cream); /* Changed text/icon to cream by default */
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1rem;
+            border-radius: 30px; /* Pill shape for elegance */
+            padding: 16px 50px;
+            color: var(--cream); 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.2em;
             cursor: pointer;
-            
-            /* Changed to Row for single-line layout */
-            display: flex;
-            flex-direction: row; 
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 15px; 
-            
-            margin: 15px 0 25px 0;
-            transition: background-color 0.4s ease, color 0.4s ease, transform 0.2s ease;
+            margin: 20px 0 30px 0;
+            transition: all 0.5s var(--ease-elegant);
             z-index: 5; 
             pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--cream);
+            transform: translateY(100%);
+            transition: transform 0.5s var(--ease-elegant);
+            z-index: 0;
         }
 
         .cta-btn:hover {
-            background-color: transparent; /* Changed to unfilled on hover */
-            color: var(--crimson); /* Changed text/icon to crimson on hover */
-            transform: scale(1.02);
+            border-color: var(--crimson);
+            box-shadow: 0 10px 25px var(--crimson-glow);
         }
 
-        /* Scaled down to match text size perfectly */
-        .svg-container {
-            width: 26px;
-            height: 26px;
-            flex-shrink: 0;
+        .cta-btn:hover::before {
+            transform: translateY(0);
         }
 
-        /* The sliding text container */
         .btn-text-wrapper {
             position: relative;
             display: block;
             height: 1.2em; 
-            width: 200px; /* Fixed width so the button doesn't resize on hover */
+            width: 200px; 
             overflow: hidden;
+            z-index: 1;
         }
 
         .text-default, .text-hover {
@@ -354,11 +350,12 @@
             left: 0;
             width: 100%;
             text-align: center;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.5s var(--ease-elegant), color 0.3s ease;
         }
 
         .text-hover {
             transform: translateY(100%);
+            color: var(--crimson);
         }
 
         .cta-btn:hover .text-default {
@@ -369,186 +366,252 @@
             transform: translateY(0);
         }
 
-        /* Sneaky Animation Keyframes */
-        .stick {
-            transform-origin: 65px 70px; /* Pivots exactly at his hand */
-            animation: stir 1.2s infinite linear;
+        /* --- UPCOMING EVENT SECTION --- */
+        .upcoming-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px;
+            background-color: var(--cream);
+            color: var(--crimson);
+            position: relative;
+            z-index: 4;
         }
 
-        .sneaky-eye {
-            animation: shifty-eyes 4s infinite;
+        .section-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 25px;
+            color: var(--crimson);
+            opacity: 0.6;
+            text-align: center;
         }
 
-        @keyframes stir {
-            0% { transform: rotate(-10deg); }
-            50% { transform: rotate(15deg); }
-            100% { transform: rotate(-10deg); }
+        .upcoming-container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid var(--crimson-light);
+            border-radius: 24px;
+            padding: 70px 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            
+            opacity: 0;
+            transform: scale(0.98) translateY(30px);
+            filter: blur(5px);
+            transition: all 1.2s var(--ease-elegant);
         }
 
-        @keyframes shifty-eyes {
-            0%, 20% { transform: translateX(0); }
-            25%, 45% { transform: translateX(-4px); } /* Looks back nervously */
-            50%, 75% { transform: translateX(4px); }  /* Looks down into cauldron */
-            80%, 100% { transform: translateX(0); }
+        .upcoming-container.revealed {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
         }
 
-        /* 1. Add keyframes for floating and pulsing animations */
-@keyframes floatArrow1 {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-12px); }
-}
+        .upcoming-container h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
 
-@keyframes floatArrow2 {
-    0%, 100% { transform: translateX(20%) translateY(0); }
-    50% { transform: translateX(20%) translateY(-12px); }
-}
+        .upcoming-container p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            margin-bottom: 40px;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.8;
+        }
 
-@keyframes pulseIcon {
-    0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(127, 29, 29, 0)); }
-    50% { transform: scale(1.1); opacity: 0.8; filter: drop-shadow(0 0 8px rgba(127, 29, 29, 0.4)); }
-    100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(127, 29, 29, 0)); }
-}
+        /* --- MEMORIES SECTION --- */
+        .memories-section {
+            padding: 100px 20px;
+            background-color: var(--cream);
+            position: relative;
+            z-index: 4;
+        }
 
-/* 2. Update the arrow classes to apply the floating animation[cite: 1] */
-.arrow-1 {
+        .memories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 70px;
+            text-align: center;
+            color: var(--crimson);
+        }
+
+        .memories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            align-items: start;
+        }
+
+        .memory-card {
+            border: 1px solid var(--crimson-light);
+            border-radius: 20px;
+            padding: 30px;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(5px);
+            transition: all 1s var(--ease-elegant);
+        }
+
+        .memory-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .memory-card.revealed:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--crimson-glow);
+            border-color: rgba(127, 29, 29, 0.4);
+        }
+
+        .memory-info h4 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .memory-date {
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            opacity: 0.5;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .memory-info p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            opacity: 0.85;
+        }
+
+        .ig-wrapper {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+        }
+
+        @media (max-width: 768px) {
+            .hero { height: 100svh; }
+            .text-layer { padding: 0 20px; }
+            .grid-layout { grid-template-columns: 1fr; gap: 30px; }
+            .arrow-1, .arrow-2 { display: none; }
+            .card.bottom-card { grid-column: 1; max-width: 100%; }
+        }
+
+        /* --- GREEK LADY LINE ART --- */
+.greek-lady-wrapper {
     position: absolute;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 50px;
+    top: 5px;
+    right: 5px;
+    width: 65px;
+    height: 65px;
+    color: var(--crimson);
+    opacity: 0.25; /* Subtle and elegant */
+    pointer-events: none; /* Allows the card to handle all mouse interactions */
     z-index: 0;
-    pointer-events: none;
-    /* NEW: Ethereal floating effect */
-    animation: floatArrow1 4s ease-in-out infinite; 
+    transition: opacity 0.5s var(--ease-elegant);
 }
 
-.arrow-2 {
-    position: absolute;
-    top: 175px;
-    right: 20%;
-    transform: translateX(20%);
-    width: 120px;
-    height: 85px;
-    z-index: 0;
-    pointer-events: none;
-    /* NEW: Ethereal floating effect (staggered duration) */
-    animation: floatArrow2 4.5s ease-in-out infinite; 
+.card.bottom-card:hover .greek-lady-wrapper {
+    opacity: 0.6; /* Gently illuminates on hover */
 }
 
-/* 3. Update .card to prepare for scroll-reveal and add smooth transitions[cite: 1] */
-.card {
-    background-color: transparent;
-    border: 1px solid var(--crimson);
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    display: flex;
-    gap: 20px;
-    position: relative;
-    z-index: 1;
-    /* NEW: Initial hidden state for JS reveal and smooth transition setup */
-    opacity: 0; 
-    transform: translateY(40px);
-    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+.greek-lady-svg {
+    width: 100%;
+    height: 100%;
 }
 
-/* 4. Add the 'revealed' and 'hover' states for the cards[cite: 1] */
-.card.revealed {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.card.revealed:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(127, 29, 29, 0.15);
-}
-
-/* 5. Add the pulsing hover effect to the SVG icons[cite: 1] */
-.card.revealed:hover .icon-wrapper svg {
-    animation: pulseIcon 1.5s infinite;
+.nodding-head {
+    /* Updated anchor point to match her new neck base */
+    transform-origin: 52px 95px; 
+    transform: rotate(0deg);
 }
     </style>
 </head>
 <body>
 
-   <section class="hero">
-    <img src="b.jpeg" alt="Cream Background" class="layer bg-layer" id="bg">
-    
-    <div class="text-mask-wrapper">
-        <div id="parallax-text" style="width: 100%; height: 100%;">
-            
-            <div class="text-layer">
-                <h1>Cafe Takeover</h1>
+    <section class="hero">
+        <img src="b.jpeg" alt="Cream Background" class="layer bg-layer" id="bg">
+        
+        <div class="text-mask-wrapper">
+            <div id="parallax-text" style="width: 100%; height: 100%;">
                 
-                <!-- NEW ANIMATED BUTTON -->
-               <!-- NEW ANIMATED BUTTON -->
-                <button class="cta-btn">
-                    <div class="svg-container">
-                        <!-- Literal Greek Jock Line Art -->
-                        <svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                            
-                            <!-- Cauldron & Rim -->
-                            <path d="M 60 75 C 60 95 95 95 95 75 Z" />
-                            <line x1="55" y1="75" x2="100" y2="75" />
-                            
-                            <!-- Muscular Torso -->
-                            <path d="M 15 95 C 15 65 45 65 45 95" />
-                            
-                            <!-- Flexed Bicep Arm -->
-                            <path d="M 30 70 Q 50 55 65 70" />
-                            
-                            <!-- The Stirring Stick -->
-                            <line x1="60" y1="40" x2="80" y2="90" class="stick" />
-                            
-                            <!-- Greek Profile Head (Straight nose, strong jaw) -->
-                            <path d="M 35 45 L 35 38 L 42 38 L 42 28 L 35 28 L 32 15 C 25 5 15 10 15 25 L 15 45 Z" />
-                            
-                            <!-- Laurel Wreath -->
-                            <path d="M 12 20 Q 25 10 38 20" />
-                            
-                            <!-- Sneaky Eye (Solid fill, uses transform for looking left/right) -->
-                            <circle cx="28" cy="24" r="2" fill="currentColor" stroke="none" class="sneaky-eye" />
-                            
-                        </svg>
-                    </div>
+                <div class="text-layer">
+                    <h1>Cafe Takeover</h1>
                     
-                    <div class="btn-text-wrapper">
-                        <span class="text-default">Join the fun</span>
-                        <span class="text-hover">Reserve your seat</span>
-                    </div>
-                </button>
+                    <button class="cta-btn">
+                        <div class="btn-text-wrapper">
+                            <span class="text-default">Join the fun</span>
+                            <span class="text-hover">Reserve your seat</span>
+                        </div>
+                    </button>
+                    
+                    <p>Takes under a minute</p>
+                </div>
                 
-                <p>Takes under a minute</p>
             </div>
-            
         </div>
-    </div>
-    
-    <img src="f.jpeg" alt="Crimson Line Art" class="layer fg-layer" id="fg">
-</section>
+        
+        <img src="f.jpeg" alt="Crimson Line Art" class="layer fg-layer" id="fg">
+    </section>
 
     <section class="meetup-section">
         <div class="meetup-container">
             <div class="meetup-header">
+                
+            
                 <h2>How it works</h2>
             </div>
 
-            <div class="grid-layout">
+            <div class="grid-layout" id="grid-layout">
                 
                 <svg class="arrow-1" viewBox="0 0 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M 10,40 C 50,10 100,10 140,40" stroke="#7f1d1d" stroke-width="2" fill="transparent"/>
-                    <path d="M 130,35 L 140,40 L 130,45" fill="none" stroke="#7f1d1d" stroke-width="2"/>
+                    <path class="draw-path" d="M 10,40 C 50,10 100,10 140,40" stroke="#7f1d1d" stroke-width="1.5" fill="transparent"/>
+                    <path d="M 130,35 L 140,40 L 130,45" fill="none" stroke="#7f1d1d" stroke-width="1.5"/>
                 </svg>
 
                 <svg class="arrow-2" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M 100,10 C 120,60 80,120 10,140" stroke="#7f1d1d" stroke-width="2" fill="transparent"/>
-                    <path d="M 20,130 L 10,140 L 25,145" fill="none" stroke="#7f1d1d" stroke-width="2"/>
+                    <path class="draw-path" d="M 100,10 C 120,60 80,120 10,140" stroke="#7f1d1d" stroke-width="1.5" fill="transparent"/>
+                    <path d="M 20,130 L 10,140 L 25,145" fill="none" stroke="#7f1d1d" stroke-width="1.5"/>
                 </svg>
 
                 <div class="card">
                     <div class="icon-wrapper">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                             <line x1="16" y1="2" x2="16" y2="6"></line>
                             <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -564,7 +627,7 @@
 
                 <div class="card">
                     <div class="icon-wrapper">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                             <circle cx="8.5" cy="12" r="2.5"></circle>
                             <line x1="13" y1="10.5" x2="19" y2="10.5"></line>
@@ -578,8 +641,30 @@
                 </div>
 
                 <div class="card bottom-card">
+                    <div class="greek-lady-wrapper">
+<svg class="greek-lady-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <g class="nodding-head">
+        <path d="M 25 35 C 35 10, 75 5, 85 45 C 75 25, 55 20, 25 35" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M 35 23 L 38 31 M 48 14 L 49 26 M 62 12 L 60 25 M 75 21 L 69 31 M 82 35 L 75 40" fill="none" stroke="currentColor" stroke-width="1"/>
+
+        <path d="M 32 45 C 32 45, 38 35, 65 35 C 75 35, 75 50, 75 50" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M 32 45 L 25 45 C 30 40, 40 38, 45 38" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        
+        <path d="M 75 50 C 70 65, 60 70, 55 65 L 60 45" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+
+        <path d="M 40 45 C 35 55, 35 58, 30 62 L 35 65 C 32 70, 35 75, 40 78 C 45 85, 45 95, 45 100" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+
+        <path d="M 38 52 Q 42 50, 45 52" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+
+        <path d="M 75 50 C 85 60, 75 80, 85 100" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M 68 60 C 75 75, 65 90, 75 100" fill="none" stroke="currentColor" stroke-width="1.2"/>
+
+        <path d="M 65 70 C 60 85, 60 95, 60 100" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    </g>
+</svg>
+    </div>
                     <div class="icon-wrapper">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
                             <line x1="12" y1="18" x2="12.01" y2="18"></line>
                             <polyline points="9 11 11 13 15 9"></polyline>
@@ -595,7 +680,78 @@
         </div>
     </section>
 
-   <script>
+    <section class="upcoming-section">
+        <h2 class="section-label">Upcoming Event</h2>
+        
+        <div class="upcoming-container">
+            <h2>The next Takeover</h2>
+            <p>The next Takeover is being plotted. Join the list and you’ll be the first to hear.</p>
+            
+            <button class="cta-btn">
+                <div class="btn-text-wrapper">
+                    <span class="text-default">Join the list</span>
+                    <span class="text-hover">Request Invite</span>
+                </div>
+            </button>
+        </div>
+    </section>
+
+    <section class="memories-section">
+        <div class="memories-container">
+            <h2 class="section-label">Memories</h2>
+            <h3 class="section-title">Previous Takeovers</h3>
+
+            <div class="memories-grid">
+                
+                <div class="memory-card">
+                    <div class="memory-info">
+                        <h4>Ghar Kalesh</h4>
+                        <span class="memory-date">14 / 06 / 2026</span>
+                        <p>Get sorted into a family and spend the evening competing, defending and calling each other out across games that get progressively harder to survive.</p>
+                    </div>
+                    <div class="ig-wrapper">
+                        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZkbqOoJ8As/" data-instgrm-version="14" style="background: transparent; border: 0; margin: 0; padding: 0; width: 100%;"></blockquote>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <div class="memory-info">
+                        <h4>Murder Mystery II</h4>
+                        <span class="memory-date">31 / 05 / 2026</span>
+                        <p>Someone got murdered. Find the killer. A case file lands on your table. Physical files; evidence; suspects; timeline.</p>
+                    </div>
+                    <div class="ig-wrapper">
+                        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZNZYwNCNQO/" data-instgrm-version="14" style="background: transparent; border: 0; margin: 0; padding: 0; width: 100%;"></blockquote>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <div class="memory-info">
+                        <h4>Bowling Takeover</h4>
+                        <span class="memory-date">03 / 03 / 2026</span>
+                        <p>Trade your regular plans for an evening of pins, pints, and playful competition. No gutterballs, just good vibes and great company.</p>
+                    </div>
+                    <div class="ig-wrapper">
+                        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DVbNZMQDXdi/" data-instgrm-version="14" style="background: transparent; border: 0; margin: 0; padding: 0; width: 100%;"></blockquote>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div style="text-align: center; margin-top: 80px;">
+                <a href="https://www.instagram.com/cafetakeover.in" target="_blank" class="cta-btn" style="width: auto;">
+                    <div class="btn-text-wrapper" style="width: 220px;">
+                        <span class="text-default">View all memories</span>
+                        <span class="text-hover">@cafetakeover.in</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script async src="//www.instagram.com/embed.js"></script>
+    <script>
+        // Parallax Effect
         const bg = document.getElementById('bg');
         const text = document.getElementById('parallax-text');
 
@@ -603,60 +759,82 @@
             let scrollPosition = window.scrollY;
             let windowHeight = window.innerHeight;
 
-            // 1. Background Parallax (Moves slower to create depth)
-            bg.style.transform = `translateY(${scrollPosition * 0.3}px)`;
+            bg.style.transform = `translateY(${scrollPosition * 0.2}px) scale(1.05)`;
             
-           // 2. Text Parallax
-           // Allow the text to scroll all the way down into the mask boundary
-           let textDrop = scrollPosition * 0.3; // Moves slower than the scroll, but faster than the background
-            
-            // 3. Opacity Fade (Optional Elegance)
-            // Starts fading the text out after it has scrolled down a bit, ensuring 
-            // it doesn't accidentally peek out of the bottom on unusually tall screens.
-            let fadeOutStart = windowHeight * 0.25;
+            let textDrop = scrollPosition * 0.35; 
+            let fadeOutStart = windowHeight * 0.3;
             let opacity = 1;
             
             if (scrollPosition > fadeOutStart) {
-                // Fades from 1 to 0 over the next 300 pixels of scroll
-                opacity = Math.max(1 - ((scrollPosition - fadeOutStart) / 800), 0);
+                opacity = Math.max(1 - ((scrollPosition - fadeOutStart) / 600), 0);
             }
 
-            // Apply the capped transformation and the opacity fade
             text.style.transform = `translateY(${textDrop}px)`;
             text.style.opacity = opacity;
         });
 
-        // --- NEW: Intersection Observer for Mythic Card Reveal --- //
+        // Universal elegant intersection observer
+        const revealOptions = {
+            root: null,
+            rootMargin: '0px 0px -100px 0px',
+            threshold: 0.1
+        };
 
-// Configure the observer to trigger when cards are 20% visible[cite: 1]
-const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.2
-};
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    
+                    // Trigger Arrow Drawing
+                    if (entry.target.id === 'grid-layout') {
+                        entry.target.classList.add('arrow-revealed');
+                    }
+                    
+                    // Trigger Cards & Containers with Stagger
+                    if (entry.target.classList.contains('card') || entry.target.classList.contains('memory-card')) {
+                        const siblings = Array.from(entry.target.parentNode.children).filter(el => el.classList.contains(entry.target.classList[0]));
+                        const index = siblings.indexOf(entry.target);
+                        
+                        setTimeout(() => {
+                            entry.target.classList.add('revealed');
+                        }, index * 150);
+                    } else {
+                        entry.target.classList.add('revealed');
+                    }
+                    
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, revealOptions);
 
-const cardObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-            // Add a staggered delay based on the card's position in the DOM[cite: 1]
-            const cardArray = Array.from(document.querySelectorAll('.card'));
-            const index = cardArray.indexOf(entry.target);
-            
-            setTimeout(() => {
-                entry.target.classList.add('revealed');
-            }, index * 200); // 200ms delay between each card revealing
-            
-            // Unobserve to run the animation only once[cite: 1]
-            observer.unobserve(entry.target); 
-        }
+        // Observe Elements
+        document.querySelectorAll('.card, .memory-card, .upcoming-container, #grid-layout').forEach(el => {
+            revealObserver.observe(el);
+        });
+        // --- DYNAMIC NODDING ANIMATION --- //
+const nodCard = document.querySelector('.bottom-card');
+const noddingHead = document.querySelector('.nodding-head');
+
+if (nodCard && noddingHead) {
+    nodCard.addEventListener('mousemove', (e) => {
+        const rect = nodCard.getBoundingClientRect();
+        
+        // Calculate where the mouse is vertically inside the card
+        const y = e.clientY - rect.top;
+        const percentage = (y / rect.height) - 0.5; // Yields a value between -0.5 and 0.5
+        
+        // Multiply by an angle to get the rotation (e.g., looks up 15deg, looks down 15deg)
+        const rotation = percentage * 30; 
+        
+        noddingHead.style.transform = `rotate(${rotation}deg)`;
+        noddingHead.style.transition = 'transform 0.1s ease-out';
     });
-}, observerOptions);
 
-// Attach the observer to all card elements[cite: 1]
-const cards = document.querySelectorAll('.card');
-cards.forEach(card => {
-    cardObserver.observe(card);
-});
+    nodCard.addEventListener('mouseleave', () => {
+        // Smoothly resets her posture when the mouse leaves the card
+        noddingHead.style.transform = `rotate(0deg)`;
+        noddingHead.style.transition = 'transform 0.6s var(--ease-elegant)';
+    });
+}
     </script>
-
-</body></html>
+</body>
+</html>
