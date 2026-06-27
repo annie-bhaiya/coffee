@@ -2,20 +2,33 @@ const bg = document.getElementById('bg');
 const text = document.getElementById('parallax-text');
 const fg = document.getElementById('fg');
 const ambientGlow = document.querySelector('.ambient-glow');
+const motionShapes = document.querySelectorAll('.motion-shape');
 
 window.addEventListener('scroll', () => {
     let scrollPosition = window.scrollY;
     let windowHeight = window.innerHeight;
 
-    bg.style.transform = `translateY(${scrollPosition * 0.2}px) scale(1.05)`;
-    
+    // Background parallax and blur
+    bg.style.transform = `translateY(${scrollPosition * -0.05}px) scale(1.05)`;
     let blurAmount = Math.min(scrollPosition / 80, 10);
     bg.style.filter = `blur(${blurAmount}px)`;
     
+    // FADE OUT FOREGROUND (f.jpeg)
     if (fg) {
         fg.style.transform = `translateY(${scrollPosition * -0.15}px)`;
+        // Start fading immediately, completely invisible by 80% of the screen height
+        let fgOpacity = Math.max(1 - (scrollPosition / (windowHeight * 0.8)), 0);
+        fg.style.opacity = fgOpacity;
     }
     
+    // FADE OUT TEXT MASK
+    const textMask = document.querySelector('.text-mask-wrapper');
+    if (textMask) {
+        let maskOpacity = Math.max(1 - (scrollPosition / (windowHeight * 0.8)), 0);
+        textMask.style.opacity = maskOpacity;
+    }
+    
+    // Existing Text parallax logic
     let textDrop = scrollPosition * 0.35;
     let fadeOutStart = windowHeight * 0.3;
     let opacity = 1;
@@ -29,6 +42,17 @@ window.addEventListener('scroll', () => {
     if (ambientGlow) {
         let shiftY = 50 + (scrollPosition * 0.05);
         ambientGlow.style.background = `radial-gradient(circle at 50% ${shiftY}%, rgba(127, 29, 29, 0.110) 0%, rgba(127, 29, 29, 0) 70%)`;
+    }
+
+    // NEW: Scroll-based background effects for motion graphics
+    if (motionShapes.length > 0) {
+        motionShapes.forEach((shape, index) => {
+            // Subtracting 100vh so it starts counting after the hero section
+            let activeScroll = Math.max(0, scrollPosition - windowHeight);
+            // Each shape moves at a slightly different speed to create 3D depth
+            let speed = (index + 1) * -0.12; 
+            shape.style.setProperty('--scroll-offset', `${activeScroll * speed}px`);
+        });
     }
 });
 
@@ -123,4 +147,77 @@ window.addEventListener('scroll', () => {
     if (scrollThread) {
         scrollThread.style.height = `${scrollPercentRounded}%`;
     }
+
+    // (Keep your existing text and background JS above this...)
+
+    // NEW: Motion Graphics logic
+    const motionContainer = document.querySelector('.motion-graphics-container');
+    const motionShapes = document.querySelectorAll('.motion-shape');
+
+    if (motionContainer) {
+        // Fade in the motion shapes once you scroll halfway down the hero section
+        if (scrollPosition > windowHeight * 0.5) {
+            motionContainer.style.opacity = '1';
+        } else {
+            motionContainer.style.opacity = '0';
+        }
+    }
+
+    if (motionShapes.length > 0) {
+        motionShapes.forEach((shape, index) => {
+            // Only start moving them once they are visible
+            let activeScroll = Math.max(0, scrollPosition - (windowHeight * 0.5));
+            // Gentle upward drift as you scroll down
+            let speed = (index + 1) * -0.15; 
+            shape.style.setProperty('--scroll-offset', `${activeScroll * speed}px`);
+        });
+    }
 });
+
+// --- Cinematic Hero Scroll Snap ---
+
+let isAutoScrolling = false;
+let touchStartY = 0;
+
+// Function to handle the smooth jump
+function snapToNextSection() {
+    isAutoScrolling = true;
+    
+    window.scrollTo({
+        top: window.innerHeight, // Exactly 1 viewport height down
+        behavior: 'smooth'
+    });
+
+    // Lock user scroll for 800ms while the smooth scroll animation completes
+    setTimeout(() => {
+        isAutoScrolling = false;
+    }, 800);
+}
+
+// 1. Desktop: Mouse Wheel & Trackpad
+window.addEventListener('wheel', (e) => {
+    if (isAutoScrolling) return;
+
+    // If user is within the top 50px of the site and scrolling down
+    if (window.scrollY < 50 && e.deltaY > 0) {
+        e.preventDefault(); // Stop the default jerky scroll
+        snapToNextSection();
+    }
+}, { passive: false }); 
+
+// 2. Mobile: Touch Swipe
+window.addEventListener('touchstart', (e) => {
+    touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+    if (isAutoScrolling) return;
+
+    let touchEndY = e.changedTouches[0].screenY;
+    let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold to prevent accidental triggers
+
+    // If user is within the top 50px of the site and swiping up (scrolling down)
+    if (window.scrollY < 50 && isScrollingDown) {
+        snapToNextSection();
+    }
+}, { passive: true });

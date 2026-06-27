@@ -17,6 +17,7 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Cleaned up body */
 body {
     background-color: var(--cream);
     color: var(--crimson);
@@ -24,6 +25,19 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* NEW: Viewport-locked background */
+.global-bg {
+    position: fixed;
+    top: -5vh;
+    left: -5vw;
+    width: 110vw;
+    height: 110vh;
+    object-fit: cover;
+    z-index: 0; /* Sits at the absolute floor of the website */
+    pointer-events: none;
+    will-change: transform, filter;
 }
 
 .ambient-glow {
@@ -144,7 +158,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2;
 }
 
 .layer {
@@ -172,13 +185,14 @@ body {
     height: 100%;
     z-index: 2;
     pointer-events: none;
-    -webkit-mask-image: url('mask.png');
-    mask-image: url('mask.png');
+    -webkit-mask-image: url('img/mask.png');
+    mask-image: url('img/mask.png');
     -webkit-mask-mode: luminance;
     mask-mode: luminance;
     -webkit-mask-size: cover;
     -webkit-mask-position: bottom;
     -webkit-mask-repeat: no-repeat;
+    text-align: center;
 }
 
 .text-layer {
@@ -222,6 +236,57 @@ body {
     object-position: bottom;
     opacity: 0;
     animation: elegantFadeIn 2s var(--ease-elegant) forwards 0.8s;
+}
+
+/* 2. Motion Graphics Container & Shapes */
+.motion-graphics-container {
+    position: fixed; /* Locked to the viewport so it never scrolls away */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1; 
+    opacity: 0; /* Hidden initially so it doesn't overlap the Hero section */
+    transition: opacity 0.8s var(--ease-elegant);
+}
+
+.motion-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px); /* Reduced blur so they are actually visible */
+    animation: floatShape 20s infinite ease-in-out alternate;
+    will-change: transform;
+    transform: translateY(var(--scroll-offset, 0px));
+}
+
+.shape-1 {
+    width: 45vw; height: 45vw;
+    background: rgba(127, 29, 29, 0.35); /* Boosted crimson opacity */
+    top: 20%; left: -10%;
+    animation-duration: 25s;
+}
+
+.shape-2 {
+    width: 55vw; height: 55vw;
+    background: rgba(255, 255, 255, 0.5); /* Boosted cream opacity */
+    top: 50%; right: -15%;
+    animation-duration: 30s;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    width: 40vw; height: 40vw;
+    background: rgba(127, 29, 29, 0.25); /* Boosted crimson opacity */
+    bottom: -10%; left: 15%;
+    animation-duration: 22s;
+    animation-delay: -10s;
+}
+
+@keyframes floatShape {
+    0% { transform: translateY(var(--scroll-offset, 0px)) translate(0, 0) scale(1); }
+    50% { transform: translateY(var(--scroll-offset, 0px)) translate(30px, 60px) scale(1.1); }
+    100% { transform: translateY(var(--scroll-offset, 0px)) translate(-40px, 40px) scale(0.95); }
 }
 
 .meetup-section {
@@ -554,16 +619,58 @@ body {
     }
 }
 
+.icon-wrapper {
+    animation: floatIcon 4s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.cta-btn {
+    animation: softPulse 3s infinite;
+}
+
+.cta-btn:hover {
+    animation: none; /* Stops pulse smoothly when user hovers */
+}
+
+@keyframes softPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(127, 29, 29, 0.3); }
+    50% { box-shadow: 0 0 20px 4px rgba(127, 29, 29, 0); }
+}
+
 @media (max-width: 768px) {
     .text-mask-wrapper {
-        -webkit-mask-image: url('pmask.png');
-        mask-image: url('pmask.png');
+        -webkit-mask-image: url('img/pmask.png');
+        mask-image: url('img/pmask.png');
     }
     .hero { height: 100svh; }
-    .text-layer { padding: 0 20px; }
+    .text-layer { 
+        padding: 0px 70px 70px 70px; 
+    }
+    .text-layer h1 {
+    font-size: clamp(2.8rem, 8vw, 8rem);
+    }
     .grid-layout { grid-template-columns: 1fr; gap: 30px; }
     .arrow-1, .arrow-2 { display: none; }
     .card.bottom-card { grid-column: 1; max-width: 100%; }
+}
+
+.card, .upcoming-container, .memory-card {
+    background-color: rgba(255, 255, 255, 0.45); /* Increased opacity from 0.2/0.1 */
+    backdrop-filter: blur(16px); /* Stronger glass effect */
+    border: 1px solid rgba(127, 29, 29, 0.3); /* Crisper crimson border */
+    /* Added an inner white glow and outer shadow for pop */
+    box-shadow: 0 15px 35px rgba(127, 29, 29, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.card.revealed:hover, .memory-card.revealed:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(127, 29, 29, 0.6);
+    box-shadow: 0 25px 50px rgba(127, 29, 29, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+    transform: translateY(-8px) scale(1.02) rotateX(0deg); 
 }
 
 .scroll-thread {
