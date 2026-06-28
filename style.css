@@ -208,7 +208,7 @@ body {
     filter: blur(10px);
     transform: translateY(40px);
     animation: elegantFadeIn 2s var(--ease-elegant) forwards 0.3s;
-    gap: clamp(1rem, 3vw, 2rem);
+    gap: clamp(0.8rem, 2vw, 1.2rem);
 }
 
 .text-layer h1 {
@@ -683,18 +683,27 @@ body {
     pointer-events: none;
 }
 
+.hero-logo {
+    width: clamp(80px, 15vw, 150px);
+    margin-bottom: -40px; /* Pulls it slightly closer to the h1 */
+    opacity: 0.9;
+    filter: drop-shadow(0 4px 15px rgba(127, 29, 29, 0.15));
+}
+
 /* 4. Refined Mobile Responsiveness */
 @media (max-width: 768px) {
     .text-mask-wrapper {
         -webkit-mask-image: url('img/pmask.png');
         mask-image: url('img/pmask.png');
     }
-    
+    .hero-logo{
+        margin-bottom:-10px;
+    }
     .hero { height: 100svh; }
     
     /* Reduce massive padding and scale down the Hero text */
     .text-layer { 
-        padding: 0px 20px 40px 20px; 
+        padding: 0px 20px 110px 20px; 
     }
     
     .text-layer h1 {
@@ -740,4 +749,38 @@ body {
     .section-title {
         margin-bottom: 40px;
     }
+    .cta-btn{
+        padding: 16px 35px;
+    }
+}
+
+/* --- Logo Implementations & Background Removal --- */
+
+.site-logo {
+    /* This removes the white background assuming it's placed on your cream/lighter backgrounds */
+    mix-blend-mode: multiply; 
+    pointer-events: none;
+    user-select: none;
+}
+
+
+
+.site-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0 60px 0;
+    position: relative;
+    z-index: 4;
+}
+
+.footer-logo {
+    width: 60px;
+    opacity: 0.5;
+    transition: opacity 0.5s var(--ease-elegant);
+}
+
+.footer-logo:hover {
+    opacity: 0.8;
 }
