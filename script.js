@@ -2,7 +2,7 @@ const bg = document.getElementById('bg');
 const text = document.getElementById('parallax-text');
 const fg = document.getElementById('fg');
 const ambientGlow = document.querySelector('.ambient-glow');
-const motionShapes = document.querySelectorAll('.motion-shape');
+const motionElements = document.querySelectorAll('.cafe-steam, .ambient-spark');
 
 window.addEventListener('scroll', () => {
     let scrollPosition = window.scrollY;
@@ -45,13 +45,16 @@ window.addEventListener('scroll', () => {
     }
 
     // NEW: Scroll-based background effects for motion graphics
-    if (motionShapes.length > 0) {
-        motionShapes.forEach((shape, index) => {
-            // Subtracting 100vh so it starts counting after the hero section
+// NEW: Scroll-based background effects for elegant motion graphics
+    if (motionElements.length > 0) {
+        motionElements.forEach((el, index) => {
             let activeScroll = Math.max(0, scrollPosition - windowHeight);
-            // Each shape moves at a slightly different speed to create 3D depth
-            let speed = (index + 1) * -0.12; 
-            shape.style.setProperty('--scroll-offset', `${activeScroll * speed}px`);
+            
+            // Sparks move slightly faster than the steam to create parallax depth
+            let isSpark = el.classList.contains('ambient-spark');
+            let speed = isSpark ? (index + 1) * -0.15 : (index + 1) * -0.05; 
+            
+            el.style.setProperty('--scroll-offset', `${activeScroll * speed}px`);
         });
     }
 });
@@ -152,26 +155,17 @@ window.addEventListener('scroll', () => {
 
     // NEW: Motion Graphics logic
     const motionContainer = document.querySelector('.motion-graphics-container');
-    const motionShapes = document.querySelectorAll('.motion-shape');
+    const motionElements = document.querySelectorAll('.cafe-steam, .ambient-spark');
 
-    if (motionContainer) {
+ if (motionContainer) {
         // Fade in the motion shapes once you scroll halfway down the hero section
-        if (scrollPosition > windowHeight * 0.5) {
+        if (scrollTop > winHeight * 0.5) { 
             motionContainer.style.opacity = '1';
         } else {
             motionContainer.style.opacity = '0';
         }
     }
 
-    if (motionShapes.length > 0) {
-        motionShapes.forEach((shape, index) => {
-            // Only start moving them once they are visible
-            let activeScroll = Math.max(0, scrollPosition - (windowHeight * 0.5));
-            // Gentle upward drift as you scroll down
-            let speed = (index + 1) * -0.15; 
-            shape.style.setProperty('--scroll-offset', `${activeScroll * speed}px`);
-        });
-    }
 });
 
 // --- Cinematic Hero Scroll Snap ---
