@@ -210,3 +210,31 @@ function snapToNextSection() {
 //         snapToNextSection();
 //     }
 // }, { passive: true });
+
+// --- FAQ Accordion Logic ---
+const faqItems = document.querySelectorAll('.faq-item');
+
+faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    
+    question.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+        
+        // Optional: Close other open FAQs
+        faqItems.forEach(otherItem => {
+            otherItem.classList.remove('active');
+        });
+
+        // Toggle the clicked one
+        if (!isActive) {
+            item.classList.add('active');
+        }
+    });
+});
+
+// Update the existing IntersectionObserver setup to include the new FAQ items
+document.querySelectorAll('.faq-item').forEach((el, index) => {
+    // Add staggered delay for FAQ items
+    el.style.transitionDelay = `${index * 100}ms`;
+    revealObserver.observe(el);
+});
