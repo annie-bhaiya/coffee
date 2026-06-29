@@ -188,28 +188,35 @@ function snapToNextSection() {
     }, 800);
 }
 
-// // 1. Desktop: Mouse Wheel & Trackpad
-// window.addEventListener('wheel', (e) => {
-//     if (isAutoScrolling) return;
+// 1. Desktop: Mouse Wheel & Trackpad
+window.addEventListener('wheel', (e) => {
+    if (isAutoScrolling) return;
 
-// }, { passive: false }); 
+    // If user is within the top 50px of the site and scrolling down
+    if (window.scrollY < 390 && e.deltaY > 0) {
+        e.preventDefault(); // Stop the default jerky scroll
+        snapToNextSection();
+    }
+}, { passive: false }); 
 
-// // 2. Mobile: Touch Swipe
-// window.addEventListener('touchstart', (e) => {
-//     touchStartY = e.changedTouches[0].screenY;
-// }, { passive: true });
+// 2. Mobile: Touch Swipe
+window.addEventListener('touchstart', (e) => {
+    touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
 
-// window.addEventListener('touchmove', (e) => {
-//     if (isAutoScrolling) return;
+window.addEventListener('touchmove', (e) => {
+    if (isAutoScrolling) return;
 
-//     let touchEndY = e.changedTouches[0].screenY;
-//     let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold to prevent accidental triggers
 
-//     // If user is within the top 50px of the site and swiping up (scrolling down)
-//     if (window.scrollY < 50 && isScrollingDown) {
-//         snapToNextSection();
-//     }
-// }, { passive: true });
+
+    let touchEndY = e.changedTouches[0].screenY;
+    let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold to prevent accidental triggers
+
+    // If user is within the top 50px of the site and swiping up (scrolling down)
+    if (window.scrollY < 390 && isScrollingDown) {
+        snapToNextSection();
+    }
+}, { passive: true });
 
 // --- FAQ Accordion Logic ---
 const faqItems = document.querySelectorAll('.faq-item');

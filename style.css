@@ -33,8 +33,8 @@ body {
     position: fixed;
     top: -5vh;
     left: -5vw;
-    width: 110vw;
-    height: 110vh;
+    width: 190vw;
+    height: 190vh;
     object-fit: cover;
     z-index: 0; /* Sits at the absolute floor of the website */
     pointer-events: none;
@@ -683,14 +683,24 @@ body {
     pointer-events: none;
 }
 
+/* 1. Base / Mobile Styles (Stays centered in the flex container) */
 .hero-logo {
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    width: clamp(70px, 12vw, 120px);
+    width: clamp(80px, 15vw, 150px);
+    margin-bottom: -10px; 
     opacity: 0.9;
     filter: drop-shadow(0 4px 15px rgba(127, 29, 29, 0.15));
     z-index: 10;
+}
+
+/* 2. Desktop-Only Override (Moves to top-left) */
+@media (min-width: 769px) {
+    .hero-logo {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        width: clamp(70px, 12vw, 120px);
+        margin-bottom: 0;
+    }
 }
 
 /* 4. Refined Mobile Responsiveness */
@@ -768,24 +778,89 @@ body {
 
 
 
+/* --- Sophisticated Footer --- */
 .site-footer {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* Pushes content to left and right edges */
     align-items: center;
-    padding: 20px 0 60px 0;
+    padding: 40px 60px 60px 60px; /* Added side padding to breathe */
     position: relative;
     z-index: 4;
 }
 
+.site-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(127, 29, 29, 0.15), transparent);
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: default;
+}
+
 .footer-logo {
-    width: 60px;
-    opacity: 0.5;
+    width: 45px;
+    opacity: 0.7;
+    transition: opacity 0.5s var(--ease-elegant), transform 0.5s var(--ease-elegant);
+}
+
+.footer-company-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--crimson);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.8;
     transition: opacity 0.5s var(--ease-elegant);
 }
 
-.footer-logo:hover {
-    opacity: 0.8;
+.footer-brand:hover .footer-logo {
+    opacity: 1;
+    transform: scale(1.05) rotate(-5deg);
+}
+
+.footer-brand:hover .footer-company-name {
+    opacity: 1;
+}
+
+.instagram-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--crimson);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    opacity: 0.7;
+    transition: all 0.4s var(--ease-elegant);
+}
+
+.instagram-link:hover {
+    opacity: 1;
+    color: var(--accent-gold);
+    transform: translateY(-2px);
+}
+
+.ig-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.4s var(--ease-elegant);
+}
+
+.instagram-link:hover .ig-icon {
+    transform: scale(1.15);
 }
 
 /* Card 1: Slight tilt left */
@@ -900,4 +975,19 @@ body {
 .faq-item.active .faq-answer {
     max-height: 200px;
     padding-bottom: 25px;
+}
+
+@media (max-width:768px) {
+    /* Footer Mobile Overrides */
+    .site-footer {
+        flex-direction: column;
+        gap: 30px;
+        padding: 40px 20px 60px 20px;
+        justify-content: center;
+    }
+    
+    .footer-brand {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
