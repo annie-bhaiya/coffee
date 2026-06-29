@@ -701,6 +701,28 @@ body {
         width: clamp(70px, 12vw, 120px);
         margin-bottom: 0;
     }
+    .grid-layout > .card:nth-of-type(1).revealed {
+    transform: translateY(0) scale(1) rotate(-1.5deg);
+}
+.grid-layout > .card:nth-of-type(1).revealed:hover {
+    transform: translateY(-8px) scale(1.02) rotate(-1.5deg);
+}
+
+/* Card 2: Slight tilt right */
+.grid-layout > .card:nth-of-type(2).revealed {
+    transform: translateY(0) scale(1) rotate(2.5deg);
+}
+.grid-layout > .card:nth-of-type(2).revealed:hover {
+    transform: translateY(-8px) scale(1.02) rotate(2.5deg);
+}
+
+/* Bottom Card: Minimal tilt left */
+.card.bottom-card.revealed {
+    transform: translateY(0) scale(1) rotate(-1deg);
+}
+.card.bottom-card.revealed:hover {
+    transform: translateY(-8px) scale(1.02) rotate(-1deg);
+}
 }
 
 /* 4. Refined Mobile Responsiveness */
@@ -864,28 +886,7 @@ body {
 }
 
 /* Card 1: Slight tilt left */
-.grid-layout > .card:nth-of-type(1).revealed {
-    transform: translateY(0) scale(1) rotate(-1.5deg);
-}
-.grid-layout > .card:nth-of-type(1).revealed:hover {
-    transform: translateY(-8px) scale(1.02) rotate(-1.5deg);
-}
 
-/* Card 2: Slight tilt right */
-.grid-layout > .card:nth-of-type(2).revealed {
-    transform: translateY(0) scale(1) rotate(2.5deg);
-}
-.grid-layout > .card:nth-of-type(2).revealed:hover {
-    transform: translateY(-8px) scale(1.02) rotate(2.5deg);
-}
-
-/* Bottom Card: Minimal tilt left */
-.card.bottom-card.revealed {
-    transform: translateY(0) scale(1) rotate(-1deg);
-}
-.card.bottom-card.revealed:hover {
-    transform: translateY(-8px) scale(1.02) rotate(-1deg);
-}
 
 /* --- FAQ Section --- */
 .faq-section {
