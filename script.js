@@ -193,7 +193,7 @@ window.addEventListener('wheel', (e) => {
     if (isAutoScrolling) return;
 
     // If user is within the top 50px of the site and scrolling down
-    if (window.scrollY < 390 && e.deltaY > 0) {
+    if (window.scrollY < 1100 && e.deltaY > 0) {
         e.preventDefault(); // Stop the default jerky scroll
         snapToNextSection();
     }
@@ -213,7 +213,7 @@ window.addEventListener('touchmove', (e) => {
     let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold to prevent accidental triggers
 
     // If user is within the top 50px of the site and swiping up (scrolling down)
-    if (window.scrollY < 390 && isScrollingDown) {
+    if (window.scrollY < 1100 && isScrollingDown) {
         snapToNextSection();
     }
 }, { passive: true });
