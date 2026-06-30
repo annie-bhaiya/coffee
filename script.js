@@ -184,7 +184,7 @@ function snapToNextSection() {
     
     // ---> CHANGE THIS VALUE TO ADJUST SPEED <---
     // 1500 = 1.5 seconds. Increase the number to make it slower.
-    const duration = 1300; 
+    const duration = 1700; 
     
     let start = null;
 
@@ -239,7 +239,7 @@ window.addEventListener('touchmove', (e) => {
     let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold to prevent accidental triggers
 
     // If user is within the top 50px of the site and swiping up (scrolling down)
-    if (window.scrollY < 890 && isScrollingDown) {
+    if (window.scrollY < 50 && isScrollingDown) {
         snapToNextSection();
     }
 }, { passive: true });
