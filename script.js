@@ -223,7 +223,7 @@ window.addEventListener('wheel', (e) => {
     }
 
     // If user is within the top section and scrolling down
-    if (window.scrollY < 890 && e.deltaY > 0) {
+    if (window.scrollY < 50 && e.deltaY > 0) {
         e.preventDefault(); // Stop the default jerky scroll
         snapToNextSection();
     }
@@ -245,7 +245,7 @@ window.addEventListener('touchmove', (e) => {
     let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold
 
     // If user is within the top section and swiping up (scrolling down)
-    if (window.scrollY < 890 && isScrollingDown) {
+    if (window.scrollY < 50 && isScrollingDown) {
         e.preventDefault(); // Stop native scroll from fighting the animation
         snapToNextSection();
     }
