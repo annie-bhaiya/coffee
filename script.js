@@ -173,19 +173,45 @@ window.addEventListener('scroll', () => {
 let isAutoScrolling = false;
 let touchStartY = 0;
 
-// Function to handle the smooth jump
+// Function to handle the smooth jump with CUSTOM speed
 function snapToNextSection() {
+    if (isAutoScrolling) return; // Prevent overlapping triggers
     isAutoScrolling = true;
-    
-    window.scrollTo({
-        top: window.innerHeight, // Exactly 1 viewport height down
-        behavior: 'smooth'
-    });
 
-    // Lock user scroll for 800ms while the smooth scroll animation completes
-    setTimeout(() => {
-        isAutoScrolling = false;
-    }, 800);
+    const targetPosition = window.innerHeight; // 1 viewport height down
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    
+    // ---> CHANGE THIS VALUE TO ADJUST SPEED <---
+    // 1500 = 1.5 seconds. Increase the number to make it slower.
+    const duration = 5000; 
+    
+    let start = null;
+
+    // Custom animation loop
+    function animation(currentTime) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+
+        // Elegant easing function (easeInOutCubic) to match your site's vibe
+        const ease = progress < 0.5 
+            ? 4 * progress * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        window.scrollTo(0, startPosition + distance * ease);
+
+        if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+        } else {
+            // Unlock scrolling shortly after the animation finishes
+            setTimeout(() => {
+                isAutoScrolling = false;
+            }, 100); 
+        }
+    }
+
+    requestAnimationFrame(animation);
 }
 
 // 1. Desktop: Mouse Wheel & Trackpad
@@ -193,7 +219,7 @@ window.addEventListener('wheel', (e) => {
     if (isAutoScrolling) return;
 
     // If user is within the top 50px of the site and scrolling down
-    if (window.scrollY < 1100 && e.deltaY > 0) {
+    if (window.scrollY < 890 && e.deltaY > 0) {
         e.preventDefault(); // Stop the default jerky scroll
         snapToNextSection();
     }
@@ -213,7 +239,7 @@ window.addEventListener('touchmove', (e) => {
     let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold to prevent accidental triggers
 
     // If user is within the top 50px of the site and swiping up (scrolling down)
-    if (window.scrollY < 1100 && isScrollingDown) {
+    if (window.scrollY < 890 && isScrollingDown) {
         snapToNextSection();
     }
 }, { passive: true });

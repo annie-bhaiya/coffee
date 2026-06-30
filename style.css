@@ -14,10 +14,6 @@
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 /* Cleaned up body */
 body {
     background-color: var(--cream);
@@ -701,27 +697,9 @@ body {
         width: clamp(70px, 12vw, 120px);
         margin-bottom: 0;
     }
-    .grid-layout > .card:nth-of-type(1).revealed {
-    transform: translateY(0) scale(1) rotate(-1.5deg);
-}
-.grid-layout > .card:nth-of-type(1).revealed:hover {
-    transform: translateY(-8px) scale(1.02) rotate(-1.5deg);
-}
 
-/* Card 2: Slight tilt right */
-.grid-layout > .card:nth-of-type(2).revealed {
-    transform: translateY(0) scale(1) rotate(2.5deg);
-}
-.grid-layout > .card:nth-of-type(2).revealed:hover {
-    transform: translateY(-8px) scale(1.02) rotate(2.5deg);
-}
-
-/* Bottom Card: Minimal tilt left */
-.card.bottom-card.revealed {
-    transform: translateY(0) scale(1) rotate(-1deg);
-}
-.card.bottom-card.revealed:hover {
-    transform: translateY(-8px) scale(1.02) rotate(-1deg);
+    .text-layer {
+        padding: 0px 20px 70px 20px; 
 }
 }
 
@@ -886,7 +864,28 @@ body {
 }
 
 /* Card 1: Slight tilt left */
+.grid-layout > .card:nth-of-type(1).revealed {
+    transform: translateY(0) scale(1) rotate(-1.5deg);
+}
+.grid-layout > .card:nth-of-type(1).revealed:hover {
+    transform: translateY(-8px) scale(1.02) rotate(-1.5deg);
+}
 
+/* Card 2: Slight tilt right */
+.grid-layout > .card:nth-of-type(2).revealed {
+    transform: translateY(0) scale(1) rotate(2.5deg);
+}
+.grid-layout > .card:nth-of-type(2).revealed:hover {
+    transform: translateY(-8px) scale(1.02) rotate(2.5deg);
+}
+
+/* Bottom Card: Minimal tilt left */
+.card.bottom-card.revealed {
+    transform: translateY(0) scale(1) rotate(-1deg);
+}
+.card.bottom-card.revealed:hover {
+    transform: translateY(-8px) scale(1.02) rotate(-1deg);
+}
 
 /* --- FAQ Section --- */
 .faq-section {
@@ -965,7 +964,7 @@ body {
 }
 
 .faq-answer p {
-    padding: 0 30px;
+    padding: 20px 30px 5px 30px;
     margin: 0;
     font-size: 0.95rem;
     color: #1a1a1a;
