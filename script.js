@@ -184,7 +184,7 @@ function snapToNextSection() {
     
     // ---> CHANGE THIS VALUE TO ADJUST SPEED <---
     // 1500 = 1.5 seconds. Increase the number to make it slower.
-    const duration = 1700; 
+    const duration = 2700; 
     
     let start = null;
 
