@@ -216,9 +216,13 @@ function snapToNextSection() {
 
 // 1. Desktop: Mouse Wheel & Trackpad
 window.addEventListener('wheel', (e) => {
-    if (isAutoScrolling) return;
+    // If animation is running, block native scrolling to prevent the vibration/glitch
+    if (isAutoScrolling) {
+        e.preventDefault();
+        return;
+    }
 
-    // If user is within the top 50px of the site and scrolling down
+    // If user is within the top section and scrolling down
     if (window.scrollY < 890 && e.deltaY > 0) {
         e.preventDefault(); // Stop the default jerky scroll
         snapToNextSection();
@@ -231,18 +235,21 @@ window.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 window.addEventListener('touchmove', (e) => {
-    if (isAutoScrolling) return;
-
-
+    // If animation is running, block native touch scrolling
+    if (isAutoScrolling) {
+        e.preventDefault();
+        return;
+    }
 
     let touchEndY = e.changedTouches[0].screenY;
-    let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold to prevent accidental triggers
+    let isScrollingDown = touchStartY > (touchEndY + 10); // 10px threshold
 
-    // If user is within the top 50px of the site and swiping up (scrolling down)
-    if (window.scrollY < 50 && isScrollingDown) {
+    // If user is within the top section and swiping up (scrolling down)
+    if (window.scrollY < 890 && isScrollingDown) {
+        e.preventDefault(); // Stop native scroll from fighting the animation
         snapToNextSection();
     }
-}, { passive: true });
+}, { passive: false }); // NOTE: Changed to false so preventDefault() works on mobile
 
 // --- FAQ Accordion Logic ---
 const faqItems = document.querySelectorAll('.faq-item');
